@@ -12,3 +12,6 @@ build/
 
 # registry artifacts
 registry.json
+
+# Symantica generated artifacts
+**/registry.json
