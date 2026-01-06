@@ -1,0 +1,48 @@
+dataset:
+  name: applications
+  table: analytics.fct_applications
+  time_column: created_at
+  default_grain: day
+
+metrics:
+  - name: applications
+    semantic_key: underwriting.applications
+    type: count
+    expr: application_id
+    description: Total number of applications
+    owner: underwriting
+
+  - name: approvals
+    semantic_key: underwriting.approvals
+    type: sum
+    expr: is_approved
+    description: Approved applications (0/1)
+    owner: underwriting
+
+  - name: approval_rate
+    semantic_key: underwriting.approval_rate
+    type: ratio
+    numerator: approvals
+    denominator: applications
+    format: percent
+    description: Approval rate
+    owner: underwriting
+    aliases: [apr_rate]
+
+behaviors:
+  global_filters: [date_range, channel, state]
+  compare_period:
+    enabled: true
+    modes: [previous_period]
+  drilldown:
+    enabled: true
+    max_rows: 5000
+  export_formats: [csv]
+
+dashboard:
+  title: Underwriting Overview
+  pages:
+    - name: Executive
+      include_metrics: [applications, approval_rate]
+      views: [kpi, trend, breakdown]
+      breakdown_dims: [channel, state]
