@@ -11,11 +11,13 @@ def main(argv: list[str] | None = None) -> int:
     argv = argv or sys.argv[1:]
 
     if not argv:
-        print("Usage: symantica build-registry <project.yaml> --out <registry.json>")
+        print("Usage: symantica build-registry <project.yaml> [--out registry.json] [--lock registry.lock.json]")
         return 2
 
     project_path = argv[0]
+
     out_path = None
+    lock_path = None
 
     # minimal arg parsing
     if "--out" in argv:
@@ -25,8 +27,16 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         out_path = argv[idx + 1]
 
-    if not out_path:
-        out_path = "registry.json"
+    if "--lock" in argv:
+        idx = argv.index("--lock")
+        if idx + 1 >= len(argv):
+            print("[ERROR] Missing value for --lock")
+            return 2
+        lock_path = argv[idx + 1]
+
+    # Defaults: write BOTH
+    out_path = out_path or "registry.json"
+    lock_path = lock_path or "registry.lock.json"
 
     try:
         project = load_project(project_path)
@@ -47,7 +57,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Registry build failed: {len(errors)} error(s), {len(warns)} warning(s).")
         return 1
 
-    registry = build_registry(project)
-    p = write_registry(registry, out_path)
-    print(f"Registry written: {p}")
+    # Timestamped artifact (operational)
+    reg = build_registry(project, deterministic=False)
+    p1 = write_registry(reg, out_path)
+
+    # Deterministic lockfile (diff-friendly)
+    lock = build_registry(project, deterministic=True)
+    p2 = write_registry(lock, lock_path)
+
+    print(f"Registry written: {p1}")
+    print(f"Registry lock written: {p2}")
     return 0
