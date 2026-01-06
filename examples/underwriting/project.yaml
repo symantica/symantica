@@ -4,18 +4,32 @@ dataset:
   time_column: created_at
   default_grain: day
 
+models:
+  - name: applications
+    primary_table: analytics.fct_applications
+    primary_key: application_id
+    time_column: created_at
+    dimensions:
+      application_id: { column: application_id, type: string }
+      channel: { column: channel, type: string }
+      state: { column: state, type: string }
+    measures:
+      is_approved: { column: is_approved, type: int }
+
 metrics:
   - name: applications
     semantic_key: underwriting.applications
+    model: applications
     type: count
-    expr: application_id
+    expr: dimensions.application_id
     description: Total number of applications
     owner: underwriting
 
   - name: approvals
     semantic_key: underwriting.approvals
+    model: applications
     type: sum
-    expr: is_approved
+    expr: measures.is_approved
     description: Approved applications (0/1)
     owner: underwriting
 
