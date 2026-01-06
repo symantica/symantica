@@ -1,0 +1,62 @@
+{
+  "dataset": {
+    "default_grain": "day",
+    "name": "applications",
+    "table": "analytics.fct_applications",
+    "time_column": "created_at"
+  },
+  "generated_at_utc": "2026-01-06T15:57:00.609557+00:00",
+  "metrics": [
+    {
+      "aliases": [],
+      "definition": {
+        "denominator": null,
+        "expr": "application_id",
+        "formula": null,
+        "numerator": null,
+        "type": "count"
+      },
+      "definition_hash": "3ad6ed8fef14210e1bbf0e5f48c0195c8ba19e36a8ca6aae8bd5538596dd1b32",
+      "format": null,
+      "name": "applications",
+      "owner": "underwriting",
+      "semantic_key": "underwriting.applications",
+      "tags": []
+    },
+    {
+      "aliases": [
+        "apr_rate"
+      ],
+      "definition": {
+        "denominator": "applications",
+        "expr": null,
+        "formula": null,
+        "numerator": "approvals",
+        "type": "ratio"
+      },
+      "definition_hash": "10cc98b61e01cf822f3e3a0d7f0b604908656bf9dad15b0c76d01975a9b6622e",
+      "format": "percent",
+      "name": "approval_rate",
+      "owner": "underwriting",
+      "semantic_key": "underwriting.approval_rate",
+      "tags": []
+    },
+    {
+      "aliases": [],
+      "definition": {
+        "denominator": null,
+        "expr": "is_approved",
+        "formula": null,
+        "numerator": null,
+        "type": "sum"
+      },
+      "definition_hash": "a63531f9b20feffc368bf99a8ad6adac7ac0da6f104941bccff83a56a7550493",
+      "format": null,
+      "name": "approvals",
+      "owner": "underwriting",
+      "semantic_key": "underwriting.approvals",
+      "tags": []
+    }
+  ],
+  "schema": "symantica.registry.v1"
+}
