@@ -15,7 +15,6 @@ class RegistryMetric:
     definition_hash: str
     definition: Dict[str, Any]
 
-    # metadata (not part of hash)
     format: Optional[str]
     owner: Optional[str]
     tags: List[str]
@@ -23,16 +22,6 @@ class RegistryMetric:
 
 
 def build_registry(project: ProjectSpec, *, deterministic: bool) -> Dict[str, Any]:
-    """
-    Create a registry artifact suitable for:
-    - diffing in PRs (deterministic=True)
-    - publishing internally (deterministic=False)
-
-    Determinism:
-    - metrics sorted by semantic_key then name
-    - definition_hash derived from canonical_definition
-    - deterministic registry omits timestamps
-    """
     metrics: List[RegistryMetric] = []
     for m in project.metrics:
         metrics.append(
