@@ -10,3 +10,6 @@ dependencies = ["pydantic>=2.0", "pyyaml"]
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[project.scripts]
+symantica = "cli.__main__:main"
